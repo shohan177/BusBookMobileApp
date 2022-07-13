@@ -32,23 +32,27 @@ function MenuScreen() {
 }
 
 const Tabbutton = (props) => {
-    const { onPress } = props
+    const { onPress, icon, header } = props
     const focused = props.accessibilityState.selected
     const viewRef = React.useRef(null)
     React.useEffect(() => {
         if (focused) {
-            viewRef.current.animate({ 0: { scale: 0.5, rotate: '0deg' }, 1: { scale: 1.5, rotate: '360deg' } })
+            viewRef.current.animate({ 0: { scale: 0.5, translateY: 0 }, 1: { scale: 1.2, translateY: -10 } })
         } else {
-            viewRef.current.animate({ 0: { scale: 1.5, rotate: '360deg' }, 1: { scale: 1, rotate: '0deg' } })
+            viewRef.current.animate({ 0: { scale: 1.2, translateY: -10 }, 1: { scale: 1, translateY: 0 } })
         }
     }, [focused])
     console.log(focused)
     return (
         <TouchableOpacity style={styles.tabContainer} onPress={onPress} activeOpacity={1}>
-            <Animatable.View ref={viewRef} duration={1000}>
+            <View>
+                <Animatable.View ref={viewRef} duration={700} style={focused ? styles.activeTab : styles.tab}>
 
-                <AntDesign name="home" size={30} color={focused ? 'red' : 'blue'} />
-            </Animatable.View>
+                    <AntDesign name={icon} size={30} color={focused ? '#ffffff' : 'blue'} />
+                </Animatable.View>
+            </View>
+
+            <Text style={{ fontSize: 12, color: '#0f0f0f', fontWeight: '400', bottom: 2 }}>{header}</Text>
         </TouchableOpacity>
     )
 }
@@ -78,25 +82,25 @@ export default function Routes() {
                 <Tab.Screen name="Home" component={HomeScreen}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <AntDesign name="home" size={30} color="#900" />
+                            <AntDesign name="home" size={25} color="#900" />
                         ),
-                        tabBarButton: (props) => <Tabbutton {...props} />
+                        tabBarButton: (props) => <Tabbutton {...props} icon="home" header="Home" />
                     }}
                 />
                 <Tab.Screen name="Profile" component={ProfileScreen}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <AntDesign name="user" size={30} color="#900" />
+                            <AntDesign name="user" size={25} color="#900" />
                         ),
-                        tabBarButton: (props) => <Tabbutton {...props} />
+                        tabBarButton: (props) => <Tabbutton {...props} icon="user" header="Profile" />
                     }}
                 />
                 <Tab.Screen name="Menu" component={MenuScreen}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <AntDesign name="appstore-o" size={30} color="#900" />
+                            <AntDesign name="appstore-o" size={25} color="#900" />
                         ),
-                        tabBarButton: (props) => <Tabbutton {...props} />
+                        tabBarButton: (props) => <Tabbutton {...props} icon="appstore-o" header="Menu" />
                     }}
                 />
             </Tab.Navigator>
@@ -109,5 +113,21 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    activeTab: {
+        backgroundColor: "#689dff",
+        padding: 6,
+        borderRadius: 50,
+        borderColor: '#ffffff',
+        borderWidth: 2,
+        // transform: [{ translateY: -10 }]
+        // bottom: 10,
+
+    },
+    tab: {
+        backgroundColor: '#ffffff',
+        borderColor: '#ffffff',
+        padding: 5,
+        borderRadius: 50,
     }
 })
